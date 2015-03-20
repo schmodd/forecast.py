@@ -75,7 +75,6 @@ if __name__ == '__main__':
     result = requests.get(URL, headers=HTTP_HEADERS).json()
 
     if args.d:
-        print(URL)
         showDaily(args.l, MEAS_UNIT)
     elif args.ho:
         showHourly(args.l, MEAS_UNIT)
