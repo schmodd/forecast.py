@@ -13,9 +13,8 @@ API_KEY=''
 LAT=''
 LONG=''
 ```
-surf to https://developer.forecast.io/ for an api key
-
-use http://dbsgeo.com/latlon/ (or something else) to get coordinates for your location
+- surf to https://developer.forecast.io/ for an api key
+- use http://dbsgeo.com/latlon/ (or something else) to get coordinates for your location
 
 ## options
 ```
