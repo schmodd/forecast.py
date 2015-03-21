@@ -25,26 +25,26 @@ def formatDatetime(unixTime, outputFormat='%d. %b. %H:%M'):
 def getMeasuringUnit():
     return '°F' if UNITS == 'us' else '°C'
 
-def showDaily(limit, measuring_unit):
+def showDaily(measuring_unit):
     HEAD = ['Date', 'Temp min', 'Temp max', 'Humidity', 'Summary']
     table = PrettyTable(HEAD, border = False, padding_width = 2)
     table.align='r'
     table.align['Date'] = 'l'
     table.align['Summary'] = 'l'
-    for day in result['daily']['data'][0:limit]:
+    for day in result['daily']['data']:
         table.add_row([formatDatetime(day['time'], '%d. %b.'), '{:6.2f} {:2}'.format(day['temperatureMin'], 
             measuring_unit), '{:6.2f} {:2}'.format(day['temperatureMax'], measuring_unit), 
             '{:2.0f} {:1}'.format(day['humidity']*100, '%'), day['summary']]) 
     print('\n', end='')
     print(table)
 
-def showHourly(limit, measuring_unit):
+def showHourly(measuring_unit):
     HEAD = ['DateTime', 'Temp', 'Humidity', 'Summary']
     table = PrettyTable(HEAD, border = False, padding_width = 2)
     table.align='r'
     table.align['DateTime'] = 'l'
     table.align['Summary'] = 'l'
-    for hour in result['hourly']['data'][0:limit]:
+    for hour in result['hourly']['data']:
         table.add_row([formatDatetime(hour['time'], '%d. %b. %H:%M'), '{:6.2f} {:2}'.format(hour['temperature'], 
             measuring_unit), '{:2.0f} {:1}'.format(hour['humidity']*100, '%'), hour['summary']])
     print('\n', end='')
@@ -52,10 +52,9 @@ def showHourly(limit, measuring_unit):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='weather forecast powered by forecast.io')
-    parser.add_argument('-d', help='daily forecast', action='store_true')
-    parser.add_argument('-ho', help='hourly forecast', action='store_true')
-    parser.add_argument('-l', help='limit forecast output to x hours/days', 
-        type=int, default=24)
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('-df', help='daily forecast', action='store_true')
+    group.add_argument('-hf', help='hourly forecast', action='store_true')
     args = parser.parse_args()
 
     BASE_URL = 'https://api.forecast.io/forecast/'
@@ -65,19 +64,19 @@ if __name__ == '__main__':
         'Accept-Encoding': 'gzip'}
     MEAS_UNIT = getMeasuringUnit()
 
-    if args.d:
+    if args.df:
         URL += 'hourly,currently'
-    elif args.ho:
+    elif args.hf:
         URL += 'daily,currently'
     else:
         URL += 'hourly,daily'
 
     result = requests.get(URL, headers=HTTP_HEADERS).json()
 
-    if args.d:
-        showDaily(args.l, MEAS_UNIT)
-    elif args.ho:
-        showHourly(args.l, MEAS_UNIT)
+    if args.df:
+        showDaily(MEAS_UNIT)
+    elif args.hf:
+        showHourly(MEAS_UNIT)
     else:
         print('{:} {:10}'.format('\n time:', formatDatetime(result['currently']['time'])), end='')
         print('{:} {:6.2f} {:2}'.format(' | temp:', result['currently']['temperature'], MEAS_UNIT), end='')
