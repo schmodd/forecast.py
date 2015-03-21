@@ -7,7 +7,7 @@ weather forecast powered by forecast.io
 - prettytable 
 
 ## configuration
-you have to enter valid entries for:
+you have to setup a few things (in the script) before running:
 ```
 API_KEY='' 
 LAT=''
