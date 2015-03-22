@@ -51,6 +51,9 @@ def showHourly(measuring_unit):
     print(table)
 
 if __name__ == '__main__':
+    if not API_KEY or not LAT or not LONG:
+        sys.exit("aborted! please make sure api-key and coordinates are specified")
+    
     parser = argparse.ArgumentParser(description='weather forecast powered by forecast.io')
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-df', help='daily forecast', action='store_true')
