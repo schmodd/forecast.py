@@ -23,7 +23,7 @@ def formatDatetime(unixTime, outputFormat='%d. %b. %H:%M'):
     return datetime.datetime.fromtimestamp(unixTime).strftime(outputFormat)
 
 def getMeasuringUnit():
-    return '°F' if UNITS == 'us' else '°C'
+    return '\N{DEGREE SIGN}F' if UNITS == 'us' else '\N{DEGREE SIGN}C'
 
 def showDaily(measuring_unit):
     HEAD = ['Date', 'Temp min', 'Temp max', 'Humidity', 'Summary']
