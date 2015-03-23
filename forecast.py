@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# todo: add alerts, colors
+# todo: only proceed if http request status = 200, add alerts, colors
 
 import requests
 import json
@@ -15,6 +15,8 @@ from prettytable import PrettyTable
 API_KEY=''
 LAT=''
 LONG=''
+LIMIT=24 # limit hourly forecast output (48 max)
+
 #some api settings
 UNITS='si' # auto possibly shows wrong measuring unit
 LANG='en'
@@ -44,7 +46,7 @@ def showHourly(measuring_unit):
     table.align='r'
     table.align['DateTime'] = 'l'
     table.align['Summary'] = 'l'
-    for hour in result['hourly']['data']:
+    for hour in result['hourly']['data'][0:LIMIT]:
         table.add_row([formatDatetime(hour['time'], '%d. %b. %H:%M'), '{:6.2f} {:2}'.format(hour['temperature'], 
             measuring_unit), '{:2.0f} {:1}'.format(hour['humidity']*100, '%'), hour['summary']])
     print('\n', end='')
