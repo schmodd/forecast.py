@@ -6,7 +6,7 @@ weather forecast powered by forecast.io
 - requests
 - prettytable 
 
-## configuration
+## setup
 you have to setup a few things (in the script) before running:
 ```
 API_KEY='' 
@@ -16,7 +16,7 @@ LONG=''
 - surf to https://developer.forecast.io/ for an api key
 - use http://dbsgeo.com/latlon/ (or something else) to get coordinates for your location
 
-## options
+## execution
 by default (without passing any args) the current weather is shown
 ```
   usage: forecast.py [-h] [-df | -hf]
