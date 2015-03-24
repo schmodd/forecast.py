@@ -1,5 +1,5 @@
 # forecast.py
-weather forecast powered by forecast.io
+cli weather forecast powered by forecast.io
 
 ## requirements
 - python3
