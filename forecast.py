@@ -28,7 +28,7 @@ def getMeasuringUnit():
     return '\N{DEGREE SIGN}F' if UNITS == 'us' else '\N{DEGREE SIGN}C'
 
 def showDaily(measuring_unit):
-    HEAD = ['Date', 'Temp min', 'Temp max', 'Humidity', 'Summary']
+    HEAD = ['Date', 'Temp min', 'Temp max', 'HUM', 'SR', 'SS', 'Summary']
     table = PrettyTable(HEAD, border = False, padding_width = 2)
     table.align='r'
     table.align['Date'] = 'l'
@@ -36,12 +36,13 @@ def showDaily(measuring_unit):
     for day in result['daily']['data']:
         table.add_row([formatDatetime(day['time'], '%d. %b.'), '{:6.2f} {:2}'.format(day['temperatureMin'], 
             measuring_unit), '{:6.2f} {:2}'.format(day['temperatureMax'], measuring_unit), 
-            '{:2.0f} {:1}'.format(day['humidity']*100, '%'), day['summary']]) 
+            '{:2.0f} {:1}'.format(day['humidity']*100, '%'), formatDatetime(day['sunriseTime'], '%H:%M'),
+            formatDatetime(day['sunsetTime'], '%H:%M'), day['summary']]) 
     print('\n', end='')
     print(table)
 
 def showHourly(measuring_unit):
-    HEAD = ['DateTime', 'Temp', 'Humidity', 'Summary']
+    HEAD = ['DateTime', 'Temp', 'HUM', 'Summary']
     table = PrettyTable(HEAD, border = False, padding_width = 2)
     table.align='r'
     table.align['DateTime'] = 'l'
@@ -83,6 +84,6 @@ if __name__ == '__main__':
     elif args.hf:
         showHourly(MEAS_UNIT)
     else:
-        print('{:} {:10}'.format('\n time:', formatDatetime(result['currently']['time'])), end='')
+        print('{:} {:10}'.format('\n date:', formatDatetime(result['currently']['time'])), end='')
         print('{:} {:6.2f} {:2}'.format(' | temp:', result['currently']['temperature'], MEAS_UNIT), end='')
         print('{:} {:2.0f} {:1}'.format(' | humidity:', result['currently']['humidity']*100, '%'))
