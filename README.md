@@ -27,5 +27,6 @@ by default (without passing any args) the current weather is shown
 ```
 
 ## what it looks like
+click to watch at original size
 
 ![preview](what_it_looks_like.png)
