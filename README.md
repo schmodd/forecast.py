@@ -27,14 +27,14 @@ by default (without passing any args) the current weather is shown, see modes fo
 ```
 
 ## modes
-### default
-- shows date, temperature, humidity, precipitation
+#### default
+shows date, temperature, humidity, precipitation
  
-### daily forecast
-- shows date, temperature, humidity, precipitation, summary
+#### daily forecast
+shows date, temperature, humidity, precipitation, summary
 
-### hourly forecast
-- shows date, temperature minimum, temperature maximum, humidity, sunrise, sunset, precipitation, summary
+#### hourly forecast
+shows date, temperature minimum, temperature maximum, humidity, sunrise, sunset, precipitation, summary
 
 ## what it looks like
 click to watch at original size
