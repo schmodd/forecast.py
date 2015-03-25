@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# todo: only proceed if http request status = 200, add alerts, colors
+# todo: add alerts, colors
 
 import requests
 import json
@@ -27,29 +27,35 @@ def formatDatetime(unixTime, outputFormat='%d. %b. %H:%M'):
 def getMeasuringUnit():
     return '\N{DEGREE SIGN}F' if UNITS == 'us' else '\N{DEGREE SIGN}C'
 
+def getPrecip(probability, type):
+    probability = '{:3.0f} {:1}'.format(probability * 100, '%')
+    return probability if type == 0 else '{:} {:}'.format(probability, type)
+
 def showDaily(measuring_unit):
-    HEAD = ['Date', 'Temp min', 'Temp max', 'HUM', 'SR', 'SS', 'Summary']
+    HEAD = ['Date', 'Temp min', 'Temp max', 'HUM', 'SR', 'SS', 'Precip', 'Summary']
     table = PrettyTable(HEAD, border = False, padding_width = 2)
     table.align='r'
     table.align['Date'] = 'l'
     table.align['Summary'] = 'l'
     for day in result['daily']['data']:
-        table.add_row([formatDatetime(day['time'], '%d. %b.'), '{:6.2f} {:2}'.format(day['temperatureMin'], 
-            measuring_unit), '{:6.2f} {:2}'.format(day['temperatureMax'], measuring_unit), 
-            '{:2.0f} {:1}'.format(day['humidity']*100, '%'), formatDatetime(day['sunriseTime'], '%H:%M'),
-            formatDatetime(day['sunsetTime'], '%H:%M'), day['summary']]) 
+        table.add_row([formatDatetime(day['time'], '%d. %b.'), '{:4.2f} {:2}'.format(day['temperatureMin'], 
+            measuring_unit), '{:4.2f} {:2}'.format(day['temperatureMax'], measuring_unit), 
+            '{:3.0f} {:1}'.format(day['humidity'] * 100, '%'), formatDatetime(day['sunriseTime'], '%H:%M'),
+            formatDatetime(day['sunsetTime'], '%H:%M'), getPrecip(day['precipProbability'], 
+            day['precipType'] if day['precipProbability'] > 0 else 0), day['summary']]) 
     print('\n', end='')
     print(table)
 
 def showHourly(measuring_unit):
-    HEAD = ['DateTime', 'Temp', 'HUM', 'Summary']
+    HEAD = ['Date', 'Temp', 'HUM', 'Precip', 'Summary']
     table = PrettyTable(HEAD, border = False, padding_width = 2)
     table.align='r'
-    table.align['DateTime'] = 'l'
+    table.align['Date'] = 'l'
     table.align['Summary'] = 'l'
     for hour in result['hourly']['data'][0:LIMIT]:
-        table.add_row([formatDatetime(hour['time'], '%d. %b. %H:%M'), '{:6.2f} {:2}'.format(hour['temperature'], 
-            measuring_unit), '{:2.0f} {:1}'.format(hour['humidity']*100, '%'), hour['summary']])
+        table.add_row([formatDatetime(hour['time'], '%d. %b. %H:%M'), '{:4.2f} {:2}'.format(hour['temperature'], 
+            measuring_unit), '{:3.0f} {:1}'.format(hour['humidity'] * 100, '%'), getPrecip(hour['precipProbability'],
+            hour['precipType'] if hour['precipProbability'] > 0 else 0), hour['summary']])
     print('\n', end='')
     print(table)
 
@@ -77,13 +83,20 @@ if __name__ == '__main__':
     else:
         URL += 'hourly,daily'
 
-    result = requests.get(URL, headers=HTTP_HEADERS).json()
+    result = requests.get(URL, headers=HTTP_HEADERS)
 
-    if args.df:
-        showDaily(MEAS_UNIT)
-    elif args.hf:
-        showHourly(MEAS_UNIT)
+    if result.status_code == 200:
+        result = result.json()
+
+        if args.df:
+            showDaily(MEAS_UNIT)
+        elif args.hf:
+            showHourly(MEAS_UNIT)
+        else:
+            print('{:} {:10}'.format('\n date:', formatDatetime(result['currently']['time'])), end='')
+            print('{:} {:6.2f} {:2}'.format(' | temp:', result['currently']['temperature'], MEAS_UNIT), end='')
+            print('{:} {:2.0f} {:1}'.format(' | humidity:', result['currently']['humidity'] * 100, '%'), end='')
+            print('{:} {:}'.format(' | precipitation:', getPrecip(result['currently']['precipProbability'], 
+                result['currently']['precipType'] if result['currently']['precipProbability'] > 0 else 0)))
     else:
-        print('{:} {:10}'.format('\n date:', formatDatetime(result['currently']['time'])), end='')
-        print('{:} {:6.2f} {:2}'.format(' | temp:', result['currently']['temperature'], MEAS_UNIT), end='')
-        print('{:} {:2.0f} {:1}'.format(' | humidity:', result['currently']['humidity']*100, '%'))
+        print('aborted! problems connecting to forecast.io')
