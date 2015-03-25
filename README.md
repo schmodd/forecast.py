@@ -17,7 +17,7 @@ LONG=''
 - use http://dbsgeo.com/latlon/ (or something else) to get coordinates for your location
 
 ## execution
-by default (without passing any args) the current weather is shown
+by default (without passing any args) the current weather is shown, see modes for detailed explanation
 ```
   usage: forecast.py [-h] [-df | -hf]
   
@@ -25,6 +25,14 @@ by default (without passing any args) the current weather is shown
   -df         daily forecast
   -hf         hourly forecast
 ```
+
+## modes
+### default: 
+- shows date, temperature, humidity, precipitation
+### daily forecast:
+- shows date, temperature, humidity, precipitation, summary
+###hourly forecast:
+- shows date, temperature minimum, temperature maximum, humidity, sunrise, sunset, precipitation, summary
 
 ## what it looks like
 click to watch at original size
