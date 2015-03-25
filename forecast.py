@@ -29,7 +29,7 @@ def getMeasuringUnit():
 
 def getPrecip(probability, type):
     probability = '{:3.0f} {:1}'.format(probability * 100, '%')
-    return probability if type == 0 else '{:} {:}'.format(probability, type)
+    return '{:} {:>5}'.format(probability, '-') if type == 0 else '{:} {:>5}'.format(probability, type)
 
 def showDaily(measuring_unit):
     HEAD = ['Date', 'Temp min', 'Temp max', 'HUM', 'SR', 'SS', 'Precip', 'Summary']
