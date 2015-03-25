@@ -25,3 +25,7 @@ by default (without passing any args) the current weather is shown
   -df         daily forecast
   -hf         hourly forecast
 ```
+
+## what it looks like
+
+![preview](what_it_looks_like.png)
