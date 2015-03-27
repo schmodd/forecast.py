@@ -3,8 +3,7 @@ cli weather forecast powered by forecast.io
 
 ## requirements
 - python3
-- requests
-- prettytable 
+- python modules: requests, prettytable 
 
 ## setup
 you have to setup a few things (in the script) before running:
